@@ -1,6 +1,6 @@
 
 from PIL import Image, ImageDraw
-from cell import Cell, Direction
+from .cell import Cell, Direction
 import util
 
 

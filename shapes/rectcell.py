@@ -3,7 +3,7 @@
 from PIL import Image, ImageDraw
 import random
 import util
-from cell import Cell
+from .cell import Cell
 
 
 """

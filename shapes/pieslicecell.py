@@ -3,7 +3,7 @@
 
 from PIL import Image, ImageDraw
 import util
-from cell import Cell, Quadrant
+from .cell import Cell, Quadrant
 
 class PieSliceCell(Cell):
     def __init__(self, size=(200,200), base_colors=[], second_colors=[], 
@@ -70,8 +70,8 @@ class PieSliceCell(Cell):
         # Start with botom right quadrant drawing
         # self.shrink=3
 
-        x_offset = (pw*(len(self.colors_secondary)/2)+self.shrink)
-        y_offset = (pw*(len(self.colors_secondary)/2)+self.shrink)
+        x_offset = (pw*(len(self.colors_secondary)//2)+self.shrink)
+        y_offset = (pw*(len(self.colors_secondary)//2)+self.shrink)
         for idx, color in enumerate(self.colors):
             color = int(color[0]),int(color[1]),int(color[2])
             aidx = len(self.colors_secondary) + idx +1

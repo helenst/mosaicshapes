@@ -7,7 +7,7 @@ from shapes.circlecell import CircleCell
 from shapes.rectcell import RectCell
 from shapes.pieslicecell import PieSliceCell
 from shapes.halfcirclecell import HalfCircleCell
-from skimage.color import rgb2grey
+from skimage.color import rgb2gray
 from skimage import feature
 import util
 import numpy as np
@@ -80,7 +80,7 @@ class Grid():
         self.edg_img = self.og_image.filter(ImageFilter.UnsharpMask(2, percent=300))
         self.image_array = np.array(self.edg_img)
         # Find edges
-        self.img_edges = feature.canny(rgb2grey(self.image_array), sigma=2)
+        self.img_edges = feature.canny(rgb2gray(self.image_array), sigma=2)
         self.width, self.height = self.og_image.size
 
 
@@ -93,21 +93,21 @@ class Grid():
         else:
             self.pixels = int(longest*.013)
 
-        self.cols = (self.width/self.pixels)
-        self.rows = (self.height/self.pixels)
+        self.cols = (self.width//self.pixels)
+        self.rows = (self.height//self.pixels)
 
         # Crop the image if our pixels doesn't divide equally.  Most cases we always crop
         # will prevent out of bounds processing on cells
         # XXX Does this work for diamonds too?
         self.og_image = self.og_image.crop((0, 0, self.cols*self.pixels, self.rows*self.pixels))
-        self.grid_status = np.zeros([self.width/self.pixels, self.height/self.pixels])
+        self.grid_status = np.zeros([self.width//self.pixels, self.height//self.pixels])
 
     # By default we occupy one cell at a time.  x_total is number of additional horizontal
     # cells to occupy.  Vertical is number of additional vertical cells
     def occupy(self, x, y, x_total=1, y_total=1):
         for i in range(x_total):
             for j in range(y_total):
-                if x+i < self.width/self.pixels and y+j < self.height/self.pixels:
+                if x+i < self.width//self.pixels and y+j < self.height//self.pixels:
                     self.grid_status[x+i][y+j] = 1
 
     # Test vertical expansion
@@ -175,7 +175,8 @@ class Grid():
     def n_pass(self, n_total=-1):
         self.grid_start_end(0, self.rows)
 
-    def grid_start_end_thread(self, (s_row, f_row, out_path)):
+    def grid_start_end_thread(self, params):
+        (s_row, f_row, out_path) = params
         self.grid_start_end(s_row, f_row)
         self.save(out_path)
         # print "{s},{e}".format(s=s_row, e=f_row)
@@ -250,7 +251,7 @@ class Grid():
                         img = ccolor.draw(self.N)
 
                     self.canvas_img.paste(img, (int(x*self.N), int(y*self.N)))
-                    self.occupy(col, row, pix_w/pix, pix_h/pix)
+                    self.occupy(col, row, pix_w//pix, pix_h//pix)
 
     def crop_grid(self, img, N=2):
         return img.crop((0, 0, self.cols*self.pixels*N, self.rows*self.pixels*N))
@@ -258,10 +259,10 @@ class Grid():
     def restore_diamond(self):
         diamond_img = self.canvas_img.rotate(-45, expand=False, resample=Image.BICUBIC)
         return diamond_img.crop((
-            (self.canvas_img.size[0] - self.og_size[0])/2,
-            (self.canvas_img.size[1] - self.og_size[1])/2,
-            self.og_size[0] + (self.canvas_img.size[0] - self.og_size[0])/2,
-            self.og_size[1] + (self.canvas_img.size[1] - self.og_size[1])/2,
+            (self.canvas_img.size[0] - self.og_size[0])//2,
+            (self.canvas_img.size[1] - self.og_size[1])//2,
+            self.og_size[0] + (self.canvas_img.size[0] - self.og_size[0])//2,
+            self.og_size[1] + (self.canvas_img.size[1] - self.og_size[1])//2,
         ))
 
     def save(self, path, dpi=300, is_continue=False):
@@ -270,10 +271,10 @@ class Grid():
             diamond_img = diamond_img.rotate(-45, expand=False, resample=Image.BICUBIC)
 
             diamond_img = diamond_img.crop((
-                (diamond_img.size[0] - self.target_size[0])/2 + self.pixels,
-                (diamond_img.size[1] - self.target_size[1])/2 + self.pixels,
-                self.target_size[0] + (diamond_img.size[0] - self.target_size[0])/2 - self.pixels,
-                self.target_size[1] + (diamond_img.size[1] - self.target_size[1])/2 - self.pixels,
+                (diamond_img.size[0] - self.target_size[0])//2 + self.pixels,
+                (diamond_img.size[1] - self.target_size[1])//2 + self.pixels,
+                self.target_size[0] + (diamond_img.size[0] - self.target_size[0])//2 - self.pixels,
+                self.target_size[1] + (diamond_img.size[1] - self.target_size[1])//2 - self.pixels,
             ))
             diamond_img.save(path, "jpeg", icc_profile=self.og_image.info.get('icc_profile'),
                              quality=95, dpi=(dpi, dpi))

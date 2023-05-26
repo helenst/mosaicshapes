@@ -89,7 +89,7 @@ class GenColor(object):
             r,g,b = base_color
             quad = 1 if util.luminance(r,g,b) > 100 else 0
 
-            for i in range(-n/2+quad, n/2+quad):
+            for i in range(-n//2+quad, n//2+quad):
                 color = np.asarray(base_color) + (i)*distance/float(n)
                 color[0] = util.clamp_int(color[0], 0, 255) #R
                 color[1] = util.clamp_int(color[1], 0, 255) #G

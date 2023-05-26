@@ -4,7 +4,7 @@ from PIL import Image, ImageDraw
 from numpy.random import randint
 from random import shuffle
 import colorsys
-from cell import Cell
+from .cell import Cell
 import util
 
 
@@ -68,7 +68,7 @@ class CompColor(Cell):
     def draw_circle(self, N):
         n_width, n_height = int(self.width*N), int(self.height*N)
         # pw = (n_width/len(self.colors))/randint(2,2) # line width of circles
-        pw = (n_width/len(self.colors))/2  # line width of circles
+        pw = (n_width//len(self.colors))//2  # line width of circles
         stretch = 0
 
         rect_paper = Image.new('RGBA', (n_width, n_height))
@@ -87,9 +87,9 @@ class CompColor(Cell):
 
         for idx, color in enumerate(self.colors):
             color = int(color[0]), int(color[1]), int(color[2])
-            x = (pw*idx+stretch) + pw/2*(3-1)
+            x = (pw*idx+stretch) + pw//2*(3-1)
             y = pw*idx
-            ex = (n_width-pw*idx-stretch) - pw/2*(3-1)
+            ex = (n_width-pw*idx-stretch) - pw//2*(3-1)
             ey = (n_height-pw*idx)
             circle_canvas.ellipse([x, y, ex, ey], fill=color)
 
@@ -104,7 +104,7 @@ class CompColor(Cell):
         paper = Image.new('RGBA', (n_width, n_height))
         canvas = ImageDraw.Draw(paper)
 
-        pw = (n_width/len(self.colors))/2
+        pw = (n_width//len(self.colors))//2
         for idx, color in enumerate(self.colors):
             color = int(color[0]), int(color[1]), int(color[2])
             paper.paste(color, [pw*idx, pw*idx, n_width-pw*idx, n_height-pw*idx])

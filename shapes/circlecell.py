@@ -1,7 +1,7 @@
 
 
 from PIL import Image, ImageDraw
-from cell import Cell
+from .cell import Cell
 import random
 import util
 
@@ -30,9 +30,9 @@ class CircleCell(Cell):
 
         dynamic = width if height > width else height
         # XXX:  May need to double check these on smaller images:
-        step = int((dynamic-dynamic/2)/(4.0))
+        step = int((dynamic-dynamic//2)/(4.0))
         step = 1 if not step else step
-        for d in range(dynamic/2, dynamic, step):
+        for d in range(dynamic//2, dynamic, step):
             # d = dynamic
             for color_combo in color_combos:
                 if height > width:
@@ -80,8 +80,8 @@ class CircleCell(Cell):
         """
         for idx, color in enumerate(self.colors):
             color = int(color[0]), int(color[1]), int(color[2])
-            sx = (n_width-n_cwidth)/2
-            sy = (n_height-n_cheight)/2
+            sx = (n_width-n_cwidth)//2
+            sy = (n_height-n_cheight)//2
             canvas.ellipse([(sx + (pw*idx)),
                            (sy+(pw*idx)),
                            (sx+(n_cwidth-pw*idx)),

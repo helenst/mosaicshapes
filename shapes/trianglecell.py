@@ -4,7 +4,7 @@ from PIL import Image, ImageDraw, ImageOps
 import numpy as np
 from colorpalette import ColorPalette
 import util
-from cell import Cell, Quadrant
+from .cell import Cell, Quadrant
 
 """
 
